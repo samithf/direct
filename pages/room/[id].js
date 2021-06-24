@@ -15,7 +15,7 @@ const iceServers = {
     { urls: "stun:stun.l.google.com:19302" },
   ],
 };
-const socket = io({
+const socket = io("ws://localhost:3000", {
   transports: ["websocket"],
 });
 
