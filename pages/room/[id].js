@@ -15,9 +15,7 @@ const iceServers = {
     { urls: "stun:stun.l.google.com:19302" },
   ],
 };
-const socket = io("ws://direct-tawny.vercel.app", {
-  transports: ["websocket"],
-});
+const socket = io();
 
 const room = () => {
   const router = useRouter();
