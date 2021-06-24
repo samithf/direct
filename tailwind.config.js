@@ -10,12 +10,14 @@ module.exports = {
     extend: {
       backgroundImage: (theme) => ({
         user: "url('/user.svg')",
+        landing: "url('/landing.jpg')",
       }),
       backgroundSize: {
         auto: "auto",
         cover: "cover",
         contain: "contain",
         "50%": "50%",
+        "130%": "130%",
         16: "4rem",
       },
     },
