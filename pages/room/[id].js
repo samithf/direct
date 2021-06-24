@@ -15,7 +15,7 @@ const iceServers = {
     { urls: "stun:stun.l.google.com:19302" },
   ],
 };
-const socket = io()
+const socket = io();
 
 const room = () => {
   const router = useRouter();
@@ -31,7 +31,6 @@ const room = () => {
   //   return "unloading";
   // });
 
-
   useEffect(() => {
     const path = window.location.pathname;
     roomId = _roomId ?? path.substring(path.length - 10);
@@ -40,8 +39,10 @@ const room = () => {
       return router.push("/");
     }
 
-    fetch('/api/socket').finally(() => {
-      const socket = io('https://direct-tawny.vercel.app/')
+    fetch("/api/socket").finally(() => {
+      const socket = io({
+        path: "/api/socketio",
+      });
 
       socket.emit("join", roomId);
       socket.on("created", () => {
@@ -63,7 +64,7 @@ const room = () => {
             alert("Couldn't Access User Media");
           });
       });
-  
+
       socket.on("joined", function () {
         creator = false;
         navigator.mediaDevices
@@ -84,7 +85,7 @@ const room = () => {
             alert("Couldn't Access User Media");
           });
       });
-  
+
       socket.on("ready", function () {
         if (creator) {
           rtcPeerConnection = new RTCPeerConnection(iceServers);
@@ -103,7 +104,7 @@ const room = () => {
             });
         }
       });
-  
+
       socket.on("offer", function (offer) {
         if (!creator) {
           rtcPeerConnection = new RTCPeerConnection(iceServers);
@@ -112,7 +113,7 @@ const room = () => {
           rtcPeerConnection.addTrack(myStream.getTracks()[0], myStream);
           rtcPeerConnection.addTrack(myStream.getTracks()[1], myStream);
           rtcPeerConnection.setRemoteDescription(offer);
-  
+
           rtcPeerConnection
             .createAnswer()
             .then((answer) => {
@@ -124,20 +125,20 @@ const room = () => {
             });
         }
       });
-  
+
       socket.on("answer", function (answer) {
         rtcPeerConnection.setRemoteDescription(answer);
       });
-  
+
       socket.on("candidate", function (candidate) {
         const iceCandidate = new RTCIceCandidate(candidate);
         rtcPeerConnection.addIceCandidate(iceCandidate);
       });
-  
+
       socket.on("full", function () {
         alert("Room is full, cannot connect!");
       });
-  
+
       socket.on("leave", function () {
         creator = true;
         const peerVideo = peerVideoRef.current;
@@ -152,13 +153,13 @@ const room = () => {
         }
         peerVideo.srcObject = null;
       });
-  
+
       function onIceCandidateFunction(event) {
         if (event.candidate) {
           socket.emit("candidate", event.candidate, roomId);
         }
       }
-  
+
       function onTrackFunction(event) {
         const peerVideo = peerVideoRef.current;
         peerVideo.srcObject = event.streams[0];
@@ -166,9 +167,7 @@ const room = () => {
           peerVideo.play();
         };
       }
-    })
-
-    
+    });
   }, []);
 
   function toggleMic() {
