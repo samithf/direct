@@ -15,7 +15,7 @@ const iceServers = {
     { urls: "stun:stun.l.google.com:19302" },
   ],
 };
-const socket = io("ws://localhost:3000", {
+const socket = io("ws://direct-tawny.vercel.app", {
   transports: ["websocket"],
 });
 
