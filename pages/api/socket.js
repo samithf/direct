@@ -1,12 +1,8 @@
-import { Server as ServerIO } from "socket.io";
-import { Server as NetServer } from "http";
+import { Server } from "socket.io";
 
 const ioHandler = (req, res) => {
   if (!res.socket.server.io) {
-    const httpServer = res.socket.server;
-    const io = new ServerIO(httpServer, {
-      path: "/api/socketio",
-    });
+    const io = new Server(res.socket.server);
 
     io.on("connection", (socket) => {
       socket.on("join", function (roomName) {

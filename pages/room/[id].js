@@ -40,10 +40,6 @@ const room = () => {
     }
 
     fetch("/api/socket").finally(() => {
-      const socket = io({
-        path: "/api/socketio",
-      });
-
       socket.emit("join", roomId);
       socket.on("created", () => {
         creator = true;
