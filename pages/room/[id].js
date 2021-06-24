@@ -41,7 +41,7 @@ const room = () => {
     }
 
     fetch('/api/socket').finally(() => {
-      const socket = io()
+      const socket = io('https://direct-tawny.vercel.app/')
 
       socket.emit("join", roomId);
       socket.on("created", () => {
