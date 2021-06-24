@@ -33,29 +33,6 @@ const room = () => {
 
 
   useEffect(() => {
-    fetch('/api/socket').finally(() => {
-     
-
-      socket.on('connect', () => {
-        console.log('connect')
-        socket.emit('hello')
-      })
-
-      socket.on('hello', data => {
-        console.log('hello', data)
-      })
-
-      socket.on('a user connected', () => {
-        console.log('a user connected')
-      })
-
-      socket.on('disconnect', () => {
-        console.log('disconnect')
-      })
-    })
-  }, []) 
-
-  useEffect(() => {
     const path = window.location.pathname;
     roomId = _roomId ?? path.substring(path.length - 10);
 
