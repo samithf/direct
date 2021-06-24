@@ -15,7 +15,7 @@ const iceServers = {
     { urls: "stun:stun.l.google.com:19302" },
   ],
 };
-const socket = io({ path: "/api/socket" });
+const socket = io();
 
 const room = () => {
   const router = useRouter();
