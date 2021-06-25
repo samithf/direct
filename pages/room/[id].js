@@ -15,7 +15,7 @@ const iceServers = {
     { urls: "stun:stun.l.google.com:19302" },
   ],
 };
-const socket = io();
+const socket = io("https://frozen-harbor-55669.herokuapp.com/");
 
 const room = () => {
   const router = useRouter();
@@ -39,131 +39,129 @@ const room = () => {
       return router.push("/");
     }
 
-    fetch("/api/socket").finally(() => {
-      socket.emit("join", roomId);
-      socket.on("created", () => {
-        creator = true;
-        navigator.mediaDevices
-          .getUserMedia({
-            audio: true,
-            video: { width: 500, height: 500 },
+    socket.emit("join", roomId);
+    socket.on("created", () => {
+      creator = true;
+      navigator.mediaDevices
+        .getUserMedia({
+          audio: true,
+          video: { width: 500, height: 500 },
+        })
+        .then((stream) => {
+          myStream = stream;
+          const video = meVideoRef.current;
+          video.srcObject = stream;
+          video.onloadedmetadata = function (e) {
+            video.play();
+          };
+        })
+        .catch((err) => {
+          alert("Couldn't Access User Media");
+        });
+    });
+
+    socket.on("joined", function () {
+      creator = false;
+      navigator.mediaDevices
+        .getUserMedia({
+          audio: true,
+          video: { width: 500, height: 500 },
+        })
+        .then(function (stream) {
+          myStream = stream;
+          const video = meVideoRef.current;
+          video.srcObject = stream;
+          video.onloadedmetadata = function (e) {
+            video.play();
+          };
+          socket.emit("ready", roomId);
+        })
+        .catch(function (err) {
+          alert("Couldn't Access User Media");
+        });
+    });
+
+    socket.on("ready", function () {
+      if (creator) {
+        rtcPeerConnection = new RTCPeerConnection(iceServers);
+        rtcPeerConnection.onicecandidate = onIceCandidateFunction;
+        rtcPeerConnection.ontrack = onTrackFunction;
+        rtcPeerConnection.addTrack(myStream.getTracks()[0], myStream);
+        rtcPeerConnection.addTrack(myStream.getTracks()[1], myStream);
+        rtcPeerConnection
+          .createOffer()
+          .then((offer) => {
+            rtcPeerConnection.setLocalDescription(offer);
+            socket.emit("offer", offer, roomId);
           })
-          .then((stream) => {
-            myStream = stream;
-            const video = meVideoRef.current;
-            video.srcObject = stream;
-            video.onloadedmetadata = function (e) {
-              video.play();
-            };
-          })
-          .catch((err) => {
-            alert("Couldn't Access User Media");
+          .catch((error) => {
+            console.log(error);
           });
-      });
-
-      socket.on("joined", function () {
-        creator = false;
-        navigator.mediaDevices
-          .getUserMedia({
-            audio: true,
-            video: { width: 500, height: 500 },
-          })
-          .then(function (stream) {
-            myStream = stream;
-            const video = meVideoRef.current;
-            video.srcObject = stream;
-            video.onloadedmetadata = function (e) {
-              video.play();
-            };
-            socket.emit("ready", roomId);
-          })
-          .catch(function (err) {
-            alert("Couldn't Access User Media");
-          });
-      });
-
-      socket.on("ready", function () {
-        if (creator) {
-          rtcPeerConnection = new RTCPeerConnection(iceServers);
-          rtcPeerConnection.onicecandidate = onIceCandidateFunction;
-          rtcPeerConnection.ontrack = onTrackFunction;
-          rtcPeerConnection.addTrack(myStream.getTracks()[0], myStream);
-          rtcPeerConnection.addTrack(myStream.getTracks()[1], myStream);
-          rtcPeerConnection
-            .createOffer()
-            .then((offer) => {
-              rtcPeerConnection.setLocalDescription(offer);
-              socket.emit("offer", offer, roomId);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        }
-      });
-
-      socket.on("offer", function (offer) {
-        if (!creator) {
-          rtcPeerConnection = new RTCPeerConnection(iceServers);
-          rtcPeerConnection.onicecandidate = onIceCandidateFunction;
-          rtcPeerConnection.ontrack = onTrackFunction;
-          rtcPeerConnection.addTrack(myStream.getTracks()[0], myStream);
-          rtcPeerConnection.addTrack(myStream.getTracks()[1], myStream);
-          rtcPeerConnection.setRemoteDescription(offer);
-
-          rtcPeerConnection
-            .createAnswer()
-            .then((answer) => {
-              rtcPeerConnection.setLocalDescription(answer);
-              socket.emit("answer", answer, roomId);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        }
-      });
-
-      socket.on("answer", function (answer) {
-        rtcPeerConnection.setRemoteDescription(answer);
-      });
-
-      socket.on("candidate", function (candidate) {
-        const iceCandidate = new RTCIceCandidate(candidate);
-        rtcPeerConnection.addIceCandidate(iceCandidate);
-      });
-
-      socket.on("full", function () {
-        alert("Room is full, cannot connect!");
-      });
-
-      socket.on("leave", function () {
-        creator = true;
-        const peerVideo = peerVideoRef.current;
-        if (rtcPeerConnection) {
-          rtcPeerConnection.ontrack = null;
-          rtcPeerConnection.onicecandidate = null;
-          rtcPeerConnection.close();
-          rtcPeerConnection = null;
-        }
-        if (peerVideo.srcObject) {
-          peerVideo.srcObject.getTracks().forEach((track) => track.stop());
-        }
-        peerVideo.srcObject = null;
-      });
-
-      function onIceCandidateFunction(event) {
-        if (event.candidate) {
-          socket.emit("candidate", event.candidate, roomId);
-        }
-      }
-
-      function onTrackFunction(event) {
-        const peerVideo = peerVideoRef.current;
-        peerVideo.srcObject = event.streams[0];
-        peerVideo.onloadedmetadata = function (e) {
-          peerVideo.play();
-        };
       }
     });
+
+    socket.on("offer", function (offer) {
+      if (!creator) {
+        rtcPeerConnection = new RTCPeerConnection(iceServers);
+        rtcPeerConnection.onicecandidate = onIceCandidateFunction;
+        rtcPeerConnection.ontrack = onTrackFunction;
+        rtcPeerConnection.addTrack(myStream.getTracks()[0], myStream);
+        rtcPeerConnection.addTrack(myStream.getTracks()[1], myStream);
+        rtcPeerConnection.setRemoteDescription(offer);
+
+        rtcPeerConnection
+          .createAnswer()
+          .then((answer) => {
+            rtcPeerConnection.setLocalDescription(answer);
+            socket.emit("answer", answer, roomId);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    });
+
+    socket.on("answer", function (answer) {
+      rtcPeerConnection.setRemoteDescription(answer);
+    });
+
+    socket.on("candidate", function (candidate) {
+      const iceCandidate = new RTCIceCandidate(candidate);
+      rtcPeerConnection.addIceCandidate(iceCandidate);
+    });
+
+    socket.on("full", function () {
+      alert("Room is full, cannot connect!");
+    });
+
+    socket.on("leave", function () {
+      creator = true;
+      const peerVideo = peerVideoRef.current;
+      if (rtcPeerConnection) {
+        rtcPeerConnection.ontrack = null;
+        rtcPeerConnection.onicecandidate = null;
+        rtcPeerConnection.close();
+        rtcPeerConnection = null;
+      }
+      if (peerVideo.srcObject) {
+        peerVideo.srcObject.getTracks().forEach((track) => track.stop());
+      }
+      peerVideo.srcObject = null;
+    });
+
+    function onIceCandidateFunction(event) {
+      if (event.candidate) {
+        socket.emit("candidate", event.candidate, roomId);
+      }
+    }
+
+    function onTrackFunction(event) {
+      const peerVideo = peerVideoRef.current;
+      peerVideo.srcObject = event.streams[0];
+      peerVideo.onloadedmetadata = function (e) {
+        peerVideo.play();
+      };
+    }
   }, []);
 
   function toggleMic() {
