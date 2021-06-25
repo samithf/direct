@@ -215,21 +215,21 @@ const room = () => {
   return (
     <div className="flex flex-col h-full">
       <div className="bg-black flex justify-center items-center h-full">
-        <div className="flex flex-col justify-center lg:flex-row">
+        <div className="flex flex-col justify-center md:flex-row">
           <video
             ref={meVideoRef}
             id="me"
             muted
             width="500"
             height="500"
-            className="bg-gray-200 border-gray-100 border bg-user bg-25% bg-center bg-no-repeat w-300 h-300 lg:w-500 md:h-500"
+            className="bg-gray-200 border-gray-100 border bg-user bg-25% bg-center bg-no-repeat w-300 h-300  lg:w-500 lg:h-500"
           ></video>
           <video
             ref={peerVideoRef}
             id="peer"
             width="500"
             height="500"
-            className="bg-gray-200 border-gray-100 border bg-user bg-25% bg-center bg-no-repeat w-300 h-300 lg:w-500 md:h-500"
+            className="bg-gray-200 border-gray-100 border bg-user bg-25% bg-center bg-no-repeat w-300 h-300  lg:w-500 lg:h-500"
           ></video>
         </div>
       </div>
