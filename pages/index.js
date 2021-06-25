@@ -16,6 +16,7 @@ export default function Home() {
   }
 
   function submitCode() {
+    if (!code) return;
     router.push(`/room/${code}`);
   }
 
