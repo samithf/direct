@@ -215,35 +215,35 @@ const room = () => {
   return (
     <div className="flex flex-col h-full">
       <div className="bg-black flex justify-center items-center h-full">
-        <div className="flex justify-center">
+        <div className="flex flex-col justify-center lg:flex-row">
           <video
             ref={meVideoRef}
             id="me"
             muted
             width="500"
             height="500"
-            className="bg-gray-200 border-gray-100 border-2 bg-user bg-50% bg-center bg-no-repeat"
+            className="bg-gray-200 border-gray-100 border bg-user bg-25% bg-center bg-no-repeat w-300 h-300 lg:w-500 md:h-500"
           ></video>
           <video
             ref={peerVideoRef}
             id="peer"
             width="500"
             height="500"
-            className="bg-gray-200 border-gray-100 border-2 bg-user bg-50% bg-center bg-no-repeat"
+            className="bg-gray-200 border-gray-100 border bg-user bg-25% bg-center bg-no-repeat w-300 h-300 lg:w-500 md:h-500"
           ></video>
         </div>
       </div>
-      <div className="h-20 bg-gray-300 text-white flex justify-center items-center p-10">
-        <div className="mx-10 cursor-pointer" onClick={toggleMic}>
-          {!mute && <Image src="/mic-on.svg" height={40} width={40} />}
-          {mute && <Image src="/mic-off.svg" height={40} width={40} />}
+      <div className="h-20 bg-gray-300 text-white flex justify-around items-center p-5 md:justify-center">
+        <div className="cursor-pointer md:mx-10" onClick={toggleMic}>
+          {!mute && <Image src="/mic-on.svg" height={30} width={30} />}
+          {mute && <Image src="/mic-off.svg" height={30} width={30} />}
         </div>
-        <div className="mx-10 cursor-pointer" onClick={toggleCamera}>
-          {cameraOn && <Image src="/camera-on.svg" height={40} width={40} />}
-          {!cameraOn && <Image src="/camera-off.svg" height={40} width={40} />}
+        <div className="cursor-pointer md:mx-10" onClick={toggleCamera}>
+          {cameraOn && <Image src="/camera-on.svg" height={30} width={30} />}
+          {!cameraOn && <Image src="/camera-off.svg" height={30} width={30} />}
         </div>
         <button
-          className="mx-10 px-10 py-3 rounded bg-red-700 text-white"
+          className="px-5 py-2 rounded bg-red-700 text-white md:mx-10"
           onClick={onClickLeave}
         >
           Leave

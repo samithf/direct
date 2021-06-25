@@ -17,8 +17,17 @@ module.exports = {
         cover: "cover",
         contain: "contain",
         "50%": "50%",
+        "25%": "25%",
         "130%": "130%",
         16: "4rem",
+      },
+      width: {
+        500: "500px",
+        300: "300px",
+      },
+      height: {
+        500: "500px",
+        300: "300px",
       },
     },
   },
