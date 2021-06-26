@@ -43,10 +43,11 @@ export default function Home() {
               onChange={(e) => setCode(e.target.value)}
               className="p-3 outline-none rounded shadow-md font-semibold"
               placeholder="Enter room ID"
-            ></input>
+            />
             <button
               className="bg-yellow-400 font-semibold px-5 py-3 hover:bg-yellow-300 rounded absolute right-0"
               onClick={submitCode}
+              type="button"
             >
               Join
             </button>

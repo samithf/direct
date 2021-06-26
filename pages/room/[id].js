@@ -61,6 +61,7 @@ const room = () => {
           };
         })
         .catch((err) => {
+          console.error(err);
           alert("Couldn't Access User Media");
         });
     });
@@ -82,6 +83,7 @@ const room = () => {
           socket.emit("ready", roomId);
         })
         .catch(function (err) {
+          console.error(err);
           alert("Couldn't Access User Media");
         });
     });
@@ -162,8 +164,10 @@ const room = () => {
 
     function onTrackFunction(event) {
       const peerVideo = peerVideoRef.current;
+      // eslint-disable-next-line prefer-destructuring
       peerVideo.srcObject = event.streams[0];
       peerVideo.onloadedmetadata = function (e) {
+        console.error(e);
         peerVideo.play();
       };
     }
@@ -223,28 +227,39 @@ const room = () => {
             width="500"
             height="500"
             className="bg-gray-200 border-gray-100 border bg-user bg-25% bg-center bg-no-repeat w-300 h-300  lg:w-500 lg:h-500"
-          ></video>
+          />
           <video
             ref={peerVideoRef}
             id="peer"
             width="500"
             height="500"
             className="bg-gray-200 border-gray-100 border bg-user bg-25% bg-center bg-no-repeat w-300 h-300  lg:w-500 lg:h-500"
-          ></video>
+          />
         </div>
       </div>
       <div className="h-20 bg-gray-300 text-white flex justify-around items-center p-5 md:justify-center">
-        <div className="cursor-pointer md:mx-10" onClick={toggleMic}>
+        <div
+          className="cursor-pointer md:mx-10"
+          onClick={toggleMic}
+          role="button"
+          tabIndex={0}
+        >
           {!mute && <Image src="/mic-on.svg" height={30} width={30} />}
           {mute && <Image src="/mic-off.svg" height={30} width={30} />}
         </div>
-        <div className="cursor-pointer md:mx-10" onClick={toggleCamera}>
+        <div
+          className="cursor-pointer md:mx-10"
+          onClick={toggleCamera}
+          role="button"
+          tabIndex={0}
+        >
           {cameraOn && <Image src="/camera-on.svg" height={30} width={30} />}
           {!cameraOn && <Image src="/camera-off.svg" height={30} width={30} />}
         </div>
         <button
           className="px-5 py-2 rounded bg-red-700 text-white md:mx-10"
           onClick={onClickLeave}
+          type="button"
         >
           Leave
         </button>
