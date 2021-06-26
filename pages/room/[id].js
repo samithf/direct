@@ -20,7 +20,7 @@ const iceServers = {
     },
   ],
 };
-const socket = io("https://frozen-harbor-55669.herokuapp.com/");
+const socket = io(process.env.NEXT_PUBLIC_SERVER);
 
 const room = () => {
   const router = useRouter();
