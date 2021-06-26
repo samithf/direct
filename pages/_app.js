@@ -1,5 +1,5 @@
 import "../styles/global.css";
-import { Head } from "next/document";
+import Head from "next/document";
 
 import Page from "../layouts/Page";
 
