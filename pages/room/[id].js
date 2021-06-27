@@ -139,7 +139,7 @@ const room = () => {
     });
 
     socket.on("full", function () {
-      alert("Room is full, cannot connect!");
+      alert("Room is full now, cannot connect!");
     });
 
     socket.on("leave", function () {
