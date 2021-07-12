@@ -2,8 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import Image from "next/image";
-// import useUnload from "../../hooks/useUnload";
-// const socket = io("http://localhost:4000");
+
 let rtcPeerConnection;
 let myStream;
 let creator;
@@ -20,7 +19,7 @@ const iceServers = {
     },
   ],
 };
-console.log("process.env.NEXT_PUBLIC_SERVER", process.env.NEXT_PUBLIC_SERVER);
+// console.log("process.env.NEXT_PUBLIC_SERVER", process.env.NEXT_PUBLIC_SERVER);
 const socket = io(process.env.NEXT_PUBLIC_SERVER);
 
 const room = () => {

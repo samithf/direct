@@ -5,3 +5,20 @@
 #__next {
   height: 100%;
 }
+
+footer {
+  position: fixed;
+  left: 50%;
+  bottom: 30px;
+  transform: translate(-50%, 0);
+  font-size: 0.8em;
+  display: flex;
+  align-items: center;
+}
+
+footer > svg {
+  stroke: red;
+  fill: red;
+  display: inline;
+  padding: 0 0.2em;
+}

@@ -6,6 +6,7 @@
     "source.fixAll.eslint": true,
     "source.fixAll.format": true
   },
-  "css.customData": [".vscode/css_custom_data.json"]
+  "css.customData": [".vscode/css_custom_data.json"],
   // "css.validate": false
+  "editor.quickSuggestions.comments": true
 }
