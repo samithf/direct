@@ -17,9 +17,19 @@ const iceServers = {
       credential: "Raosadi2",
       username: "h.samithdilhara@gmail.com",
     },
+    {
+      urls: ["turn:13.250.13.83:3478?transport=udp"],
+      username: "YzYNCouZM1mhqhmseWk6",
+      credential: "YzYNCouZM1mhqhmseWk6",
+    },
+    {
+      url: "turn:turn.anyfirewall.com:443?transport=tcp",
+      credential: "webrtc",
+      username: "webrtc",
+    },
   ],
 };
-// console.log("process.env.NEXT_PUBLIC_SERVER", process.env.NEXT_PUBLIC_SERVER);
+console.log("process.env.NEXT_PUBLIC_SERVER", process.env.NEXT_PUBLIC_SERVER);
 const socket = io(process.env.NEXT_PUBLIC_SERVER);
 
 const room = () => {
